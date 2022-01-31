@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "cozify_exporter"
+version = "0.1.1"
+description = "A Cozify Prometheus exporter"
+authors = ["Artanicus <artanicus@nocturnal.fi>"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+absl-py = "^1.0.0"
+prometheus-client = "^0.13.1"
+cozify = "^0.2.31"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+cozify_exporter = 'cozify_exporter:run'
