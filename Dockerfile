@@ -6,7 +6,7 @@ RUN curl -sSL https://install.python-poetry.org | python -
 FROM poetry_builder as builder
 RUN mkdir /build
 WORKDIR /build
-COPY cozify_expoter ./cozify_exporter
+COPY cozify_exporter ./cozify_exporter
 COPY poetry.lock pyproject.toml ./
 RUN poetry build -f wheel
 
