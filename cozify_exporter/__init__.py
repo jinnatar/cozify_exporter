@@ -5,7 +5,9 @@ from absl import logging, app, flags
 from cozify import hub, cloud
 from cozify.Error import APIError
 
-from prometheus_client import start_http_server, Summary, Counter, Gauge
+from prometheus_client import start_http_server, Summary
+
+from cozify_exporter.device_metrics import process_devices
 
 FLAGS = flags.FLAGS
 
@@ -18,19 +20,7 @@ flags.DEFINE_integer('tolerance_read', 10, 'How many consecutive read errors are
 
 # Define metrics
 PREFIX = 'cozify_'
-HUB_INFO = Gauge(PREFIX + 'hub_info', 'General Hub into', ['host', 'version', 'mac'])
-DEVICE_INFO = Gauge(PREFIX + 'device_info', 'General device into', ['id', 'name'])
-
-ACTIVE_POWER = Gauge(PREFIX + 'device_active_power', 'Current draw of power socket', ['id', 'name'])
-
-def process_devices(devices):
-    for device_id, device in devices.items():
-        if 'activePower' in device['state']:
-            ACTIVE_POWER.labels(
-                id=device_id,
-                name=device['name'],
-                    ).set(device['state']['activePower'])
-
+HUB_INFO = Summary(PREFIX + 'hub_info', 'General Hub into', ['host', 'version', 'mac'])
 
 
 def main(argv):
@@ -48,12 +38,8 @@ def main(argv):
             # every 28 days.
             cloud.ping()
 
-            # Get device data for all classes we currently support
-            data = hub.devices(capabilities=[
-                hub.capability.TEMPERATURE,
-                hub.capability.HUMIDITY,
-                hub.capability.ACTIVE_POWER,
-                ])
+            # Get all device data
+            data = hub.devices()
         except APIError as e:
             error_counter_read += 1
             logging.error(f'Failed to get data({error_counter_read}/{FLAGS.tolerance_read}). Error code: {e.status_code}, error: {e}')
