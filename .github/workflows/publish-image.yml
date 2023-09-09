@@ -22,12 +22,12 @@ jobs:
         shell: bash
         run: |
           if [[ "$GITHUB_REF" == 'refs/heads/main' ]]; then
-            echo ::set-output name=channel::"latest"
-            echo ::set-output name=version::main_${GITHUB_SHA::6}
+            echo "channel=latest" >> $GITHUB_OUTPUT
+            echo "version=main_${GITHUB_SHA::6}" >> $GITHUB_OUTPUT
           elif [[ "$GITHUB_REF" == "refs/heads/"* ]]; then
-            echo ::set-output name=version::${GITHUB_REF/refs\/heads\//}_${GITHUB_SHA::6}
+            echo "version=${GITHUB_REF/refs\/heads\//}_${GITHUB_SHA::6}" >> $GITHUB_OUTPUT
           elif [[ "$GITHUB_REF" == "refs/tags/"* ]]; then
-            echo ::set-output name=channel::${GITHUB_REF/refs\/tags\//}
+            echo "channel=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_OUTPUT
           fi
 
       - name: Extract metadata (tags, labels) for Docker
