@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "cozify_exporter"
-version = "0.1.1"
+version = "0.1.2"
 description = "A Cozify Prometheus exporter"
-authors = ["Artanicus <artanicus@nocturnal.fi>"]
+authors = ["Jinna Kiisuo <jinna+git@nocturnal.fi>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
